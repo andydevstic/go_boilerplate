@@ -17,8 +17,13 @@ import (
 
 type AuthService struct{}
 
-func NewService() AuthService {
-	return AuthService{}
+type IAuthService interface {
+	Register(context context.Context, db interfaces.DBTX, dto *RegisterUserDTO) (err error)
+	Login(context context.Context, db interfaces.DBTX, dto *LoginDTO) (user user.User, jwtToken string, err error)
+}
+
+func NewService() *AuthService {
+	return &AuthService{}
 }
 
 func IsUserWithEmailExist(context context.Context, db interfaces.DBTX, email string) (bool, error) {

@@ -15,11 +15,11 @@ type IAuthController interface {
 }
 
 type AuthController struct {
-	service  AuthService
+	service  IAuthService
 	appState *core.AppState
 }
 
-func NewAuth() IAuthController {
+func NewController() IAuthController {
 	return &AuthController{
 		service:  NewService(),
 		appState: core.GetAppState(),

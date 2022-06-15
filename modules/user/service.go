@@ -15,6 +15,15 @@ import (
 
 type UserService struct{}
 
+type IUserService interface {
+	FindUserByEmail(context context.Context, db interfaces.DBTX, email string) (user User, err error)
+	FindUserById(context context.Context, db interfaces.DBTX, userId int) (user User, err error)
+	CreateUserAdmin(context context.Context, db interfaces.DBTX, dto *UpsertUserAdminDTO) error
+	UpdateUserById(context context.Context, db interfaces.DBTX, userId int, dto *UpdateUserDTO) error
+	UpdateUserByIdAdmin(context context.Context, db interfaces.DBTX, userId int, dto *UpsertUserAdminDTO) error
+	FindUsersAdmin(context context.Context, db interfaces.DBTX, dto *FindUsersAdminDTO) ([]User, error)
+}
+
 func NewService() *UserService {
 	return &UserService{}
 }

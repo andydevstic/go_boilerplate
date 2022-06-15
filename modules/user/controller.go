@@ -17,11 +17,11 @@ type IUserController interface {
 }
 
 type UserController struct {
-	service  *UserService
+	service  IUserService
 	appState *core.AppState
 }
 
-func NewUser() *UserController {
+func NweController() *UserController {
 	return &UserController{
 		service:  NewService(),
 		appState: core.GetAppState(),
