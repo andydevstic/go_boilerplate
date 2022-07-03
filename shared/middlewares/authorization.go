@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strings"
 
-	model "github.com/andydevstic/boilerplate-backend/models"
+	"github.com/andydevstic/boilerplate-backend/shared"
 	"github.com/andydevstic/boilerplate-backend/shared/constants"
-	"github.com/andydevstic/boilerplate-backend/shared/utils/jwt"
+	jwtutils "github.com/andydevstic/boilerplate-backend/shared/utils/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/mitchellh/mapstructure"
 )
@@ -30,7 +30,7 @@ func AuthGuard(context *gin.Context) {
 		return
 	}
 
-	mapClaim, err := jwt.VerifyToken(splitted[1])
+	mapClaim, err := jwtutils.VerifyToken(splitted[1])
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "Unauthorized",
@@ -40,7 +40,7 @@ func AuthGuard(context *gin.Context) {
 		return
 	}
 
-	var userPayload model.UserAuthPayload
+	var userPayload shared.UserAuthPayload
 
 	err = mapstructure.Decode(mapClaim, &userPayload)
 	if err != nil {

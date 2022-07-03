@@ -7,18 +7,16 @@ import (
 
 type User struct {
 	gorm.Model
-	shared.ChangeLog
-	Id       int    `json:"id"`
-	Email    string `json:"email"`
-	Name     string `json:"name"`
+	Email    string `json:"email" gorm:"unique"`
+	Name     string `json:"name" gorm:"index"`
 	Type     uint8  `json:"type"`
 	Status   uint8  `json:"status"`
-	Password string `json:"password"`
+	Password string `json:"password" gorm:"not null"`
 }
 
 // Shortcut for scanning the following fields: Id, Email, Name, Type, Status, Password
-func (user *User) SpreadAllFields() (*int, *string, *string, *uint8, *uint8, *string) {
-	return &user.Id, &user.Email, &user.Name, &user.Type, &user.Status, &user.Password
+func (user *User) SpreadAllFields() (*uint, *string, *string, *uint8, *uint8, *string) {
+	return &user.ID, &user.Email, &user.Name, &user.Type, &user.Status, &user.Password
 }
 
 type FindUsersAdminDTO struct {

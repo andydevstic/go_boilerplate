@@ -6,9 +6,11 @@ import (
 
 	"github.com/andydevstic/boilerplate-backend/config"
 	"github.com/andydevstic/boilerplate-backend/shared/constants"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func ConnectDb(config *config.Config) (*sql.DB, error) {
+func ConnectDb(config *config.Config) (*gorm.DB, error) {
 	db, err := sql.Open(constants.DbDialect, config.DbStr)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse database connection string: %w", err)
@@ -18,5 +20,13 @@ func ConnectDb(config *config.Config) (*sql.DB, error) {
 		return nil, fmt.Errorf("failed to establish database connection: %w", err)
 	}
 
-	return db, nil
+	gormDB, err := gorm.Open(postgres.New(postgres.Config{
+		Conn: db,
+	}))
+
+	if err != nil {
+		return nil, fmt.Errorf("connect gorm: %w", err)
+	}
+
+	return gormDB, nil
 }

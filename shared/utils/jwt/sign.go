@@ -1,4 +1,4 @@
-package jwt
+package jwtutils
 
 import (
 	"github.com/andydevstic/boilerplate-backend/config"

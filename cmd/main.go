@@ -6,6 +6,8 @@ import (
 	"github.com/andydevstic/boilerplate-backend/config"
 	"github.com/andydevstic/boilerplate-backend/core"
 	"github.com/andydevstic/boilerplate-backend/db"
+	"github.com/andydevstic/boilerplate-backend/modules/authentication"
+	"github.com/andydevstic/boilerplate-backend/modules/user"
 	"github.com/andydevstic/boilerplate-backend/shared/middlewares"
 	_ "github.com/andydevstic/boilerplate-backend/shared/utils"
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
@@ -29,8 +31,6 @@ func main() {
 		log.Error().Msg(fmt.Sprintf("failed to establish database connection: %s", err.Error()))
 	}
 
-	defer dbConn.Close()
-
 	core.GenerateAppState(dbConn)
 
 	log.Info().Msg("Database connected successfully!")
@@ -41,10 +41,11 @@ func main() {
 
 	apiRouter := app.Group("/api")
 
-	router.NewHealth().Route(apiRouter)
-	router.NewAuth().Route(apiRouter)
-	router.NewUser().Route(apiRouter)
-	router.NewLink().Route(apiRouter)
+	userRouter := user.NewRouter(user.NewController(user.NewService()))
+	authRouter := authentication.NewRouter(authentication.NewController(user.NewService()))
+
+	userRouter.Route(apiRouter)
+	authRouter.Route(apiRouter)
 
 	err = app.Run(fmt.Sprintf("0.0.0.0:%d", config.Port))
 

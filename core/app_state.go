@@ -1,18 +1,18 @@
 package core
 
 import (
-	"database/sql"
+	"gorm.io/gorm"
 )
 
 type AppState struct {
-	Store *sql.DB
+	Db *gorm.DB
 }
 
 var appState AppState
 
 // Generates singleton app state
-func GenerateAppState(store *sql.DB) {
-	appState.Store = store
+func GenerateAppState(store *gorm.DB) {
+	appState.Db = store
 }
 
 func GetAppState() *AppState {

@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/andydevstic/boilerplate-backend/shared"
 	"github.com/andydevstic/boilerplate-backend/shared/custom"
-	"github.com/andydevstic/boilerplate-backend/shared/interfaces"
 	"github.com/doug-martin/goqu/v9"
 )
 
@@ -41,7 +41,7 @@ func ParseFilterString(columnName string, filterString string) (parsed goqu.Expr
 	operator := splitted[0]
 	filterValue := splitted[1]
 
-	columnFilter := interfaces.ColumnFilter{
+	columnFilter := shared.ColumnFilter{
 		Column:   columnName,
 		Operator: operator,
 		Value:    filterValue,
@@ -50,7 +50,7 @@ func ParseFilterString(columnName string, filterString string) (parsed goqu.Expr
 	return parseFilterCondition(&columnFilter)
 }
 
-func parseFilterCondition(rawFilter *interfaces.ColumnFilter) (parsed goqu.Expression, err error) {
+func parseFilterCondition(rawFilter *shared.ColumnFilter) (parsed goqu.Expression, err error) {
 	column := goqu.C(rawFilter.Column)
 	value := ParseScalarValueType(rawFilter.Value)
 	parsed, err = nil, nil
