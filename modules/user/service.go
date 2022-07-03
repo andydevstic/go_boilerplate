@@ -23,7 +23,7 @@ func (*UserService) FindOne(ctx context.Context, criteria map[string]any) (User,
 
 	foundUser := User{}
 
-	tx := appState.Db.Model(&User{}).First(criteria)
+	tx := appState.Db.First(&foundUser, criteria)
 
 	if err := tx.Error; err != nil {
 		return foundUser, fmt.Errorf("find one user: %w", err)

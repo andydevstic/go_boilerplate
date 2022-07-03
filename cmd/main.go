@@ -42,7 +42,7 @@ func main() {
 	apiRouter := app.Group("/api")
 
 	userRouter := user.NewRouter(user.NewController(user.NewService()))
-	authRouter := authentication.NewRouter(authentication.NewController(user.NewService()))
+	authRouter := authentication.NewRouter(authentication.NewController(user.NewService(), authentication.NewService()))
 
 	userRouter.Route(apiRouter)
 	authRouter.Route(apiRouter)

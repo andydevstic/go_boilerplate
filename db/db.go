@@ -28,5 +28,7 @@ func ConnectDb(config *config.Config) (*gorm.DB, error) {
 		return nil, fmt.Errorf("connect gorm: %w", err)
 	}
 
+	gormDB.AutoMigrate()
+
 	return gormDB, nil
 }

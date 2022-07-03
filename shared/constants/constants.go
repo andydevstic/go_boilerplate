@@ -4,7 +4,7 @@ const ParsedDtoKey string = "dto"
 const DbDialect string = "postgres"
 const UserAuthPayload string = "user"
 
-const InternalServerErrorMsg string = "Internal Server Error"
+const InternalServerErrorMsg string = "internal server error"
 
 const (
 	StatusInActive = iota + 1

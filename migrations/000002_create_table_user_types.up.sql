@@ -1,5 +1,0 @@
-CREATE TABLE user_types (
-  id SERIAL,
-  name VARCHAR(60) UNIQUE NOT NULL,
-  PRIMARY KEY (id)
-);

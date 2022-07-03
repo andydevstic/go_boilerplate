@@ -14,11 +14,6 @@ type User struct {
 	Password string `json:"password" gorm:"not null"`
 }
 
-// Shortcut for scanning the following fields: Id, Email, Name, Type, Status, Password
-func (user *User) SpreadAllFields() (*uint, *string, *string, *uint8, *uint8, *string) {
-	return &user.ID, &user.Email, &user.Name, &user.Type, &user.Status, &user.Password
-}
-
 type FindUsersAdminDTO struct {
 	shared.FindDTO
 	Email  string `json:"email" binding:"email,min=3,max=60"`
