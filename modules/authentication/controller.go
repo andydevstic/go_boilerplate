@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/andydevstic/boilerplate-backend/modules/user"
@@ -51,6 +52,8 @@ func (controller *AuthController) Login(context *gin.Context) {
 			"success": false,
 			"message": constants.InternalServerErrorMsg,
 		})
+
+		return
 	}
 
 	if err = controller.authService.ValidateUserPassword(dto.Password, user.Password); err != nil {
@@ -64,17 +67,21 @@ func (controller *AuthController) Login(context *gin.Context) {
 
 	jwtToken, err := controller.authService.GenerateJwtFromUser(&user)
 	if err != nil {
+		err = fmt.Errorf("generate jwt: %w", err)
 		custom.HandleCustomError(context, err)
+
+		return
 	}
 
 	context.JSON(http.StatusOK, LoginResponse{
 		Token: jwtToken,
 		User: shared.UserAuthPayload{
-			Id:     user.ID,
-			Email:  user.Email,
-			Name:   user.Name,
-			Type:   user.Type,
-			Status: user.Status,
+			Id:       user.ID,
+			Email:    user.Email,
+			Username: user.Username,
+			Name:     user.Name,
+			Type:     user.Type,
+			Status:   user.Status,
 		},
 	})
 
@@ -83,11 +90,19 @@ func (controller *AuthController) Login(context *gin.Context) {
 func (controller *AuthController) Register(context *gin.Context) {
 	var dto RegisterUserDTO = context.MustGet(constants.ParsedDtoKey).(RegisterUserDTO)
 
+	var err error
+
+	defer func() {
+		if err != nil {
+			log.Error().Msgf("register: %s", err)
+		}
+	}()
+
 	var payload map[string]any
 
-	err := mapstructure.Decode(dto, payload)
+	err = mapstructure.Decode(dto, &payload)
 	if err != nil {
-		log.Error().Msgf("decode user payload: %s", err)
+		err = fmt.Errorf("decode user payload: %w", err)
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"message": constants.InternalServerErrorMsg,
@@ -98,7 +113,7 @@ func (controller *AuthController) Register(context *gin.Context) {
 
 	err = controller.userService.Create(context, payload)
 	if err != nil {
-		log.Error().Msgf("create user: %s", err)
+		err = fmt.Errorf("create user: %w", err)
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"success": false,
 			"message": constants.InternalServerErrorMsg,

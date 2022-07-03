@@ -28,7 +28,10 @@ func ConnectDb(config *config.Config) (*gorm.DB, error) {
 		return nil, fmt.Errorf("connect gorm: %w", err)
 	}
 
-	gormDB.AutoMigrate()
+	// err = gormDB.AutoMigrate(&user.User{})
+	// if err != nil {
+	// 	return nil, fmt.Errorf("auto migrate: %w", err)
+	// }
 
 	return gormDB, nil
 }

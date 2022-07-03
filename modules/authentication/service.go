@@ -27,7 +27,7 @@ func (*AuthService) ValidateUserPassword(password, userPassword string) error {
 func (*AuthService) GenerateJwtFromUser(user *user.User) (string, error) {
 	jwtClaim := jwt.MapClaims{}
 
-	err := mapstructure.Decode(user, jwtClaim)
+	err := mapstructure.Decode(user, &jwtClaim)
 	if err != nil {
 		err = fmt.Errorf("decode user into jwt: %w", err)
 

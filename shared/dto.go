@@ -11,9 +11,10 @@ type FindResponseDTO struct {
 }
 
 type UserAuthPayload struct {
-	Id     uint   `json:"id" mapstructure:"id"`
-	Email  string `json:"email" mapstructure:"email"`
-	Name   string `json:"name" mapstructure:"name"`
-	Type   uint8  `json:"type" mapstructure:"type"`
-	Status uint8  `json:"status" mapstructure:"status"`
+	Id       uint   `json:"id" mapstructure:"id"`
+	Email    string `json:"email" mapstructure:"email"`
+	Username string `json:"username" mapstructure:"username"`
+	Name     string `json:"name" binding:"max=100"`
+	Type     uint8  `json:"type" mapstructure:"type"`
+	Status   uint8  `json:"status" mapstructure:"status"`
 }
