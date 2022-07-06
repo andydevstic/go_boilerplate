@@ -1,8 +1,16 @@
 package shared
 
+type FilterCriteria struct {
+	Code     string `json:"code" binding:"required,min=2,max=30"`
+	Operator string `json:"operator" binding:"required,min=2,max=30"`
+	Value    any    `json:"value"`
+}
+
 type FindDTO struct {
-	Limit  uint `form:"limit" binding:"min=1"`
-	Offset uint `form:"offset" binding:"min=0"`
+	Limit  uint             `form:"limit" binding:"min=1"`
+	Offset uint             `form:"offset" binding:"min=0"`
+	Sort   string           `form:"sort" binding:"min=3,max=60"`
+	Filter []FilterCriteria `form:"filter" binding:"min=2,max=255"`
 }
 
 type FindResponseDTO struct {

@@ -5,6 +5,7 @@ const DbDialect string = "postgres"
 const UserAuthPayload string = "user"
 
 const InternalServerErrorMsg string = "internal server error"
+const UnprocessableEntityErrorMsg string = "unprocessable entity"
 
 const (
 	StatusInActive = iota + 1
