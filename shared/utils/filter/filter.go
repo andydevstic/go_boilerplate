@@ -7,9 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/andydevstic/boilerplate-backend/shared"
 	"github.com/andydevstic/boilerplate-backend/shared/custom"
-	"github.com/doug-martin/goqu/v9"
+	"gorm.io/gorm"
 )
 
 func ParseScalarValueType(rawValue string) interface{} {
@@ -28,45 +27,31 @@ func ParseScalarValueType(rawValue string) interface{} {
 	return rawValue
 }
 
-func ParseFilterString(columnName string, filterString string) (parsed goqu.Expression, err error) {
+func AddFilterToStatement(query *gorm.DB, columnName string, filterString string) error {
 	if len(filterString) == 0 {
-		return nil, custom.NewError(http.StatusBadGateway, fmt.Errorf("invalid filter string: %s", filterString))
+		return custom.NewError(http.StatusBadGateway, fmt.Errorf("invalid filter string: %s", filterString))
 	}
 
 	splitted := strings.Split(filterString, ":")
 	if len(splitted) != 2 {
-		return nil, custom.NewError(http.StatusBadGateway, fmt.Errorf("invalid filter string: %s", filterString))
+		return custom.NewError(http.StatusBadGateway, fmt.Errorf("invalid filter string: %s", filterString))
 	}
 
 	operator := splitted[0]
-	filterValue := splitted[1]
+	filterValue := ParseScalarValueType(splitted[1])
 
-	columnFilter := shared.ColumnFilter{
-		Column:   columnName,
-		Operator: operator,
-		Value:    filterValue,
-	}
-
-	return parseFilterCondition(&columnFilter)
-}
-
-func parseFilterCondition(rawFilter *shared.ColumnFilter) (parsed goqu.Expression, err error) {
-	column := goqu.C(rawFilter.Column)
-	value := ParseScalarValueType(rawFilter.Value)
-	parsed, err = nil, nil
-
-	switch rawFilter.Operator {
+	switch operator {
 	case "gte":
-		parsed = column.Gte(value)
+		query.Where(fmt.Sprintf("%s >= ?", columnName), filterValue)
 	case "lte":
-		parsed = column.Lt(value)
+		query.Where(fmt.Sprintf("%s <= ?", columnName), filterValue)
 	case "eq":
-		parsed = column.Eq(value)
+		query.Where(fmt.Sprintf("%s = ?", columnName), filterValue)
 	case "in":
-		parsed = goqu.L(fmt.Sprintf("%s IN (%s)", rawFilter.Column, rawFilter.Value))
+		query.Where(fmt.Sprintf("%s IN (?)", columnName), filterValue)
 	default:
-		err = errors.New("operator not supported")
+		return errors.New("operator not supported")
 	}
 
-	return
+	return nil
 }

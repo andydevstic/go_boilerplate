@@ -1,5 +1,5 @@
 make --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Users/andydevstic/projects/personal/boilerplates/go_backend'
+make: Entering directory `/Users/andydevstic/projects/personal/pet_rescue/api'
 migrate --path migrations --database "postgres://postgres:postgres@localhost:5432/link_management?sslmode=disable" --verbose up
-make: Leaving directory `/Users/andydevstic/projects/personal/boilerplates/go_backend'
+make: Leaving directory `/Users/andydevstic/projects/personal/pet_rescue/api'
  

@@ -1,6 +1,7 @@
 package pet
 
 import (
+	"github.com/andydevstic/boilerplate-backend/shared/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,5 +14,8 @@ func NewRouter(controller IPetController) router {
 }
 
 func (r *router) Route(rg *gin.RouterGroup) {
-	_ = rg.Group("/users")
+	petRoutes := rg.Group("/pets")
+
+	petRoutes.GET("", middlewares.QueryValidationMiddleware[FindPetsDTO], r.controller.Find)
+	petRoutes.POST("", middlewares.JsonValidationMiddleware[CreatePetDTO], r.controller.Create)
 }

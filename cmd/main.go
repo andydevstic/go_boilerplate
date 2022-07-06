@@ -7,6 +7,7 @@ import (
 	"github.com/andydevstic/boilerplate-backend/core"
 	"github.com/andydevstic/boilerplate-backend/db"
 	"github.com/andydevstic/boilerplate-backend/modules/authentication"
+	"github.com/andydevstic/boilerplate-backend/modules/pet"
 	"github.com/andydevstic/boilerplate-backend/modules/user"
 	"github.com/andydevstic/boilerplate-backend/shared/middlewares"
 	_ "github.com/andydevstic/boilerplate-backend/shared/utils"
@@ -43,9 +44,11 @@ func main() {
 
 	userRouter := user.NewRouter(user.NewController(user.NewService()))
 	authRouter := authentication.NewRouter(authentication.NewController(user.NewService(), authentication.NewService()))
+	petRouter := pet.NewRouter(pet.NewController(pet.NewService()))
 
 	userRouter.Route(apiRouter)
 	authRouter.Route(apiRouter)
+	petRouter.Route(apiRouter)
 
 	err = app.Run(fmt.Sprintf("0.0.0.0:%d", config.Port))
 
